@@ -1,32 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Cart</title>
 </head>
 <body>
-  <h1>Your Cart</h1>
-  <div id="cart-items"></div>
-  <h3 id="total"></h3>
-  <button onclick = "checkout()">Checkout</button>
+  <h1>Cart</h1>
+  <button id="checkoutBtn">Checkout</button>
 
   <script>
-const cart = [
-  { name: "T-Shirt", price: 15, quantity: 2 },
-  { name: "Sticker Pack", price: 3, quantity: 5 }
-];
+    const backendUrl = "https://cheese-backend-x01h.onrender.com";
 
-async function checkout() {
-  const res = await fetch("https://cheese-backend-x01h.onrender.com/create-session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cart })
-  });
-  const data = await res.json();
-  if (data.url) window.location = data.url;
-  else alert("Error: " + data.error);
-}
+    // Example cart
+    const cart = [
+      { name: "T-Shirt", price: 15, quantity: 2 },
+      { name: "Sticker Pack", price: 3, quantity: 5 }
+    ];
 
+    // 1️⃣ Ping backend when page loads to wake it up
+    window.addEventListener("load", async () => {
+      try {
+        await fetch(`${backendUrl}/ping`);
+        console.log("Backend ping successful — service is awake.");
+      } catch (err) {
+        console.warn("Backend ping failed. Service may be asleep or unreachable.");
+      }
+    });
+
+    // 2️⃣ Checkout function
+    async function checkout() {
+      try {
+        const res = await fetch(`${backendUrl}/create-session`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cart })
+        });
+
+        const data = await res.json();
+        if (data.url) window.location = data.url;
+        else alert("Error: " + data.error);
+      } catch (err) {
+        alert("Failed to contact backend. Try again in a few seconds.");
+        console.error(err);
+      }
+    }
+
+    document.getElementById("checkoutBtn").addEventListener("click", checkout);
   </script>
 </body>
 </html>
