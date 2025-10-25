@@ -38,7 +38,7 @@
       if(cart.length === 0) return alert("Cart is empty");
 
       // Send cart to your backend
-      const response = await fetch("https://myshop-backend.onrender.com/create-session", {
+      const response = await fetch("https://cheese-backend-x01h.onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cart })
