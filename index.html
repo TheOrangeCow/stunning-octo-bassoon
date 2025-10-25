@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Shop</title>
+</head>
+<body>
+  <h1>My Shop</h1>
+  <div id="products"></div>
+  <a href="cart.html">Go to Cart 🛒</a>
+
+  <script>
+    const products = [
+      { id: "price_ABC123", name: "Keychain", price: 5 },
+      { id: "price_DEF456", name: "T-Shirt", price: 15 },
+      { id: "price_GHI789", name: "Sticker Pack", price: 3 }
+    ];
+
+    const container = document.getElementById("products");
+
+    products.forEach(p => {
+      const item = document.createElement("div");
+      item.innerHTML = `
+        <h3>${p.name}</h3>
+        <p>£${p.price}</p>
+        <button onclick="addToCart('${p.id}', '${p.name}', ${p.price})">Add to Cart</button>
+      `;
+      container.appendChild(item);
+    });
+
+    function addToCart(id, name, price) {
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      cart.push({ id, name, price, quantity: 1 });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${name} added to cart`);
+    }
+  </script>
+</body>
+</html>
